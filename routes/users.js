@@ -12,4 +12,7 @@ router.post("/create", usersController.create);
 router.get("/sign-up", usersController.signUp);
 router.get("/sign-in", usersController.signIn);
 
+//To signout or Destroy the session
+router.get("/sign-out", usersController.destroySession);
+
 module.exports = router;

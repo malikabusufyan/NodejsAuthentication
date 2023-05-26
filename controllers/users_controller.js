@@ -2,8 +2,8 @@ const User = require("../models/user");
 
 module.exports.profile = function (req, res) {
   try {
-    if (req.cookies.user_id) {
-      User.findById(req.cookies.user_id)
+    if (req.session.user_id) {
+      User.findById(req.session.user_id)
         .then((user) => {
           if (user) {
             return res.render("user_profile", {
@@ -78,14 +78,13 @@ module.exports.create = function (req, res) {
     return res.redirect("/users/sign-up");
   }
 };
-
 // sign in and create a session for the user
 module.exports.createSession = function (req, res) {
   try {
     User.findOne({ email: req.body.email })
       .then((user) => {
         if (user && user.password === req.body.password) {
-          res.cookie("user_id", user.id);
+          req.session.user_id = user.id; // Store user ID in the session
           return res.redirect("/users/profile"); // Redirect to user profile
         } else {
           return Promise.reject("Invalid email or password");
@@ -98,5 +97,20 @@ module.exports.createSession = function (req, res) {
   } catch (err) {
     console.log("Error in createSession:", err);
     return res.redirect("/users/sign-in");
+  }
+};
+
+// sign out and destroy the session
+module.exports.destroySession = function (req, res) {
+  try {
+    req.session.destroy(function (err) {
+      if (err) {
+        console.log("Error in destroying session", err);
+      }
+      return res.redirect("/");
+    });
+  } catch (err) {
+    console.log("Error in destroySession:", err);
+    return res.redirect("/");
   }
 };
