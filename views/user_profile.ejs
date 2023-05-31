@@ -1,9 +1,17 @@
-<link rel="stylesheet" href="/css/user_profile.css">
-<h1>
-    Codeial / Profile Page
-</h1>
-
-<p>Name: <%= user.name %>
-</p>
-<p>Email: <%= user.email %>
-</p>
+<div class="container">
+    <h1>
+        <%= user.name %>'s Profile
+    </h1>
+    <p><strong>Name:</strong>
+        <%= user.name %>
+    </p>
+    <p><strong>Email:</strong>
+        <%= user.email %>
+    </p>
+    <p><strong>About:</strong>
+        <%= user.about %>
+    </p>
+    <div class="anchor-wrapper">
+        <a href="/users/sign-out">Sign Out</a>
+    </div>
+</div>
