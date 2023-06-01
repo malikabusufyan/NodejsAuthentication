@@ -8,6 +8,8 @@ const expressLayouts = require("express-ejs-layouts");
 const db = require("./config/mongoose");
 //Accessign express Session and setting up
 const session = require("express-session");
+const passport = require("passport");
+const passportLocal = require("./config/passport-local-strategy");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -30,7 +32,7 @@ app.set("views", "./views");
 //Use of Session
 app.use(
   session({
-    name: "codeial",
+    name: "NodejsAuthentiation",
     //TODO before going for the production
     secret: "something",
     //SaveUnitialized means the user is not logged in so we dont want to add extra space
@@ -54,6 +56,12 @@ app.use(
     ),
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+//For the authentication
+app.use(passport.setAuthenticatedUser);
 
 //Use express router
 app.use("/", require("./routes"));
