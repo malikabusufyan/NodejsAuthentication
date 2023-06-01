@@ -2,46 +2,11 @@
 const passport = require("passport");
 
 const LocalStrategy = require("passport-local").Strategy;
-// const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 
 //Importing User From Model
 const User = require("../models/user");
 
-// passport.use(
-//   new LocalStrategy(
-//     {
-//       usernameField: "email",
-//       passReqToCallback: true,
-//     },
-//     function (req, email, password, done) {
-//       // Find a User and establish the identity
-//       User.findOne({ email: email })
-//         .then(async (user) => {
-//           if (!user) {
-//             console.log("Invalid Email or Password");
-//             return req.res.redirect("/users/sign-in");
-//           }
-
-//           // Compare the provided password with the hashed password stored in the user object
-//           const match = await bcrypt.compare(password, user.password);
-
-//           if (!match) {
-//             console.log("Invalid Email or Password");
-//             return req.res.redirect("/users/sign-in");
-//           }
-
-//           // Return the user if authentication is successful
-//           return done(null, user);
-//         })
-//         .catch((err) => {
-//           console.log("Error in Finding the User ---> Passport");
-//           return done(err);
-//         });
-//     }
-//   )
-// );
-
-//Authentication Using Passport
 passport.use(
   new LocalStrategy(
     {
@@ -49,14 +14,20 @@ passport.use(
       passReqToCallback: true,
     },
     function (req, email, password, done) {
-      //Find a User and establish the identity
       User.findOne({ email: email })
-        .then((user) => {
-          if (!user || user.password != password) {
-            console.log("Invalid Username and Password");
+        .then(async (user) => {
+          if (!user) {
+            console.log("Invalid Email or Password");
             return req.res.redirect("/users/sign-in");
           }
-          //Return the User if both the above condition failed
+
+          const match = await bcrypt.compare(password, user.password);
+
+          if (!match) {
+            console.log("Invalid Email or Password");
+            return req.res.redirect("/users/sign-in");
+          }
+
           return done(null, user);
         })
         .catch((err) => {
@@ -66,6 +37,32 @@ passport.use(
     }
   )
 );
+
+// //Authentication Using Passport
+// passport.use(
+//   new LocalStrategy(
+//     {
+//       usernameField: "email",
+//       passReqToCallback: true,
+//     },
+//     function (req, email, password, done) {
+//       //Find a User and establish the identity
+//       User.findOne({ email: email })
+//         .then((user) => {
+//           if (!user || user.password != password) {
+//             console.log("Invalid Username and Password");
+//             return req.res.redirect("/users/sign-in");
+//           }
+//           //Return the User if both the above condition failed
+//           return done(null, user);
+//         })
+//         .catch((err) => {
+//           console.log("Error in Finding the User ---> Passport");
+//           return done(err);
+//         });
+//     }
+//   )
+// );
 
 //Serializing the User to decide which key we need to keep in the cookie
 passport.serializeUser(function (user, done) {

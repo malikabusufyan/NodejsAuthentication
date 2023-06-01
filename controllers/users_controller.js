@@ -1,5 +1,5 @@
 const User = require("../models/user");
-
+const bcrypt = require("bcrypt");
 
 module.exports.profile = async function (req, res) {
   try {
@@ -35,7 +35,7 @@ module.exports.signIn = function (req, res) {
   });
 };
 
-//Get the SignUp Data
+// //Get the SignUp Data
 module.exports.create = async function (req, res) {
   if (req.body.password != req.body.confirm_password) {
     return res.redirect("back");
@@ -44,7 +44,14 @@ module.exports.create = async function (req, res) {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      const newUser = await User.create(req.body);
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+      const newUser = await User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: hashedPassword,
+        about: req.body.about,
+      });
       return res.redirect("/users/sign-in");
     } else {
       return res.redirect("back");
@@ -54,6 +61,25 @@ module.exports.create = async function (req, res) {
     return res.status(500).send("Internal Server Error");
   }
 };
+
+// module.exports.create = async function (req, res) {
+//   if (req.body.password != req.body.confirm_password) {
+//     return res.redirect("back");
+//   }
+
+//   try {
+//     const user = await User.findOne({ email: req.body.email });
+//     if (!user) {
+//       const newUser = await User.create(req.body);
+//       return res.redirect("/users/sign-in");
+//     } else {
+//       return res.redirect("back");
+//     }
+//   } catch (err) {
+//     console.log("error in finding/creating the user for signup", err);
+//     return res.status(500).send("Internal Server Error");
+//   }
+// };
 
 //Get the SignIn Data
 module.exports.createSession = function (req, res) {
