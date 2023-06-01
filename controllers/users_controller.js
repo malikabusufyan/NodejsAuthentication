@@ -21,7 +21,7 @@ module.exports.changePassword = async function (req, res) {
     const match = await bcrypt.compare(req.body.currentPassword, user.password);
 
     if (!match) {
-      console.log("Invalid current password");
+      req.flash("error", "Password doesn't match!");
       return res.redirect("/users/change-password");
     }
 
@@ -30,7 +30,7 @@ module.exports.changePassword = async function (req, res) {
     user.password = hashedPassword;
     await user.save();
 
-    console.log("Password changed successfully");
+    req.flash("success", "Password Changes Successfully");
     return res.redirect("/users/profile");
   } catch (err) {
     console.log("Error in changing password:", err);
@@ -61,6 +61,7 @@ module.exports.signIn = function (req, res) {
 // //Get the SignUp Data
 module.exports.create = async function (req, res) {
   if (req.body.password != req.body.confirm_password) {
+    req.flash("error", "Password Doesn't Matched");
     return res.redirect("back");
   }
 
@@ -75,6 +76,7 @@ module.exports.create = async function (req, res) {
         password: hashedPassword,
         about: req.body.about,
       });
+      req.flash("success", "Signed Up Successfully");
       return res.redirect("/users/sign-in");
     } else {
       return res.redirect("back");
@@ -106,6 +108,7 @@ module.exports.create = async function (req, res) {
 
 //Get the SignIn Data
 module.exports.createSession = function (req, res) {
+  req.flash("success", "Logged in Successfully");
   return res.redirect("/users/profile");
 };
 
@@ -121,6 +124,7 @@ module.exports.destroySession = function (req, res) {
       console.log("Error in destroying session", err);
       return res.redirect("/");
     }
+    req.flash("success", "You have been Logged Out");
     return res.redirect("/");
   });
 };

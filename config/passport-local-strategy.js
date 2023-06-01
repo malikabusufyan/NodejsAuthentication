@@ -17,14 +17,14 @@ passport.use(
       User.findOne({ email: email })
         .then(async (user) => {
           if (!user) {
-            console.log("Invalid Email or Password");
+            req.flash("error", "Invalid Username/Password");
             return req.res.redirect("/users/sign-in");
           }
 
           const match = await bcrypt.compare(password, user.password);
 
           if (!match) {
-            console.log("Invalid Email or Password");
+            req.flash("error", "Invalid Username/Password");
             return req.res.redirect("/users/sign-in");
           }
 
