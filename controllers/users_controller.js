@@ -14,8 +14,31 @@ module.exports.profile = async function (req, res) {
   }
 };
 
-//Render Router for SignUp
+// Change password action
+module.exports.changePassword = async function (req, res) {
+  try {
+    const user = await User.findById(req.user.id);
+    const match = await bcrypt.compare(req.body.currentPassword, user.password);
 
+    if (!match) {
+      console.log("Invalid current password");
+      return res.redirect("/users/change-password");
+    }
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(req.body.newPassword, saltRounds);
+    user.password = hashedPassword;
+    await user.save();
+
+    console.log("Password changed successfully");
+    return res.redirect("/users/profile");
+  } catch (err) {
+    console.log("Error in changing password:", err);
+    return res.redirect("/users/change-password");
+  }
+};
+
+//Render Router for SignUp
 module.exports.signUp = function (req, res) {
   if (req.isAuthenticated()) {
     return res.redirect("/users/profile");

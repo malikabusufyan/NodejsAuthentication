@@ -21,4 +21,20 @@ router.post(
 //To signout or Destroy the session
 router.get("/sign-out", usersController.destroySession);
 
+// Change password routes
+router.get(
+  "/change-password",
+  passport.checkAuthentication,
+  function (req, res) {
+    return res.render("change_password", {
+      title: "Change Password",
+    });
+  }
+);
+router.post(
+  "/change-password",
+  passport.checkAuthentication,
+  usersController.changePassword
+);
+
 module.exports = router;
