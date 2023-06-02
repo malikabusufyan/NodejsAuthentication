@@ -49,7 +49,8 @@ app.use(
     //MongoSession is used to store the session in the db
     store: MongoStore.create(
       {
-        mongoUrl: "mongodb://127.0.0.1/codeial_development",
+        mongoUrl:
+          "mongodb+srv://malikabusufyan:e1ugkDTl83sFypky@cluster0.h7zsuku.mongodb.net/?retryWrites=true&w=majority",
         collectionName: "sessions",
         autoRemove: "disabled",
       },

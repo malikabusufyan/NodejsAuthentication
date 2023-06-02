@@ -2,7 +2,9 @@
 const mongoose = require("mongoose");
 
 //connect to the database
-mongoose.connect("mongodb://127.0.0.1/nodeJs_authentication");
+mongoose.connect(
+  "mongodb+srv://malikabusufyan:e1ugkDTl83sFypky@cluster0.h7zsuku.mongodb.net/?retryWrites=true&w=majority"
+);
 
 //acquire the connection(to check if it's successful)
 const db = mongoose.connection;
