@@ -124,7 +124,8 @@ module.exports.destroySession = function (req, res) {
       console.log("Error in destroying session", err);
       return res.redirect("/");
     }
-    req.flash("success", "You have been Logged Out");
+    req.flash("success", "Logged Out Successfully");
+    res.clearCookie("NodejsAuthentiation");
     return res.redirect("/");
   });
 };
