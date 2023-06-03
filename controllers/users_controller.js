@@ -94,6 +94,7 @@ module.exports.createSession = function (req, res) {
   return res.redirect("/users/profile");
 };
 
+//To destroy session
 module.exports.destroySession = function (req, res) {
   req.logout(function (err) {
     if (err) {
