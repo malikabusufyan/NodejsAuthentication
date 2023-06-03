@@ -10,7 +10,8 @@ passport.use(
       clientID:
         "710222838589-vrs36kj34dbjrs0f1ghr93ghcoto5jqc.apps.googleusercontent.com",
       clientSecret: "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",
-      callbackURL: "http://localhost:8000/users/auth/google/callback",
+      callbackURL:
+        "https://nodejsauthentication-rgo5.onrender.com/users/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
